@@ -7,11 +7,9 @@ redirect_from:
   - /about/
   - /about.html
 ---
-![](../images/sf_headshot_cropped.jpeg)
-
 ## About Me
 
-I am an incoming PhD student at the Language Technologies Institute within Carnegie Mellon University’s School of Computer Science. Before joining LTI, I graduated with a B.S. in Math and Computer Science from Harvey Mudd College, where I worked with [https://www.caldenwloka.com/](Profs. Calden Wloka) and [https://sites.google.com/g.hmc.edu/hzinnbrooks](Heather Zinn Brooks).
+I am an incoming PhD student at the Language Technologies Institute within Carnegie Mellon University’s School of Computer Science. Before joining LTI, I graduated with a B.S. in Math and Computer Science from Harvey Mudd College, where I worked with [Calden Wloka](https://www.caldenwloka.com/) and [Heather Zinn Brooks](https://sites.google.com/g.hmc.edu/hzinnbrooks). The summer before starting my PhD, I also interned at LTI under [Graham Neubig](http://www.phontron.com/) and [Yonatan Bisk](https://yonatanbisk.com/).
 
 I’m broadly interested in pragmatics, truthfulness, and interpretability in natural language systems. Some specific subquestions I’m currently interested in include:
 
