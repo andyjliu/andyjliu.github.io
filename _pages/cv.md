@@ -5,6 +5,7 @@ url: "/cv"
 permalink: ../files/andyliu_cv.pdf
 author_profile: true
 redirect_from:
+  - /cv/
   - /resume
 ---
 
