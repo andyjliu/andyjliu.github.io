@@ -12,7 +12,7 @@ Andy Liu, Emmy Liu, Hao Zhu, Yonatan Bisk, Graham Neubig
 ## Heterogeneous Topic Interdependencies in Friedkin-Johnsen Models of Opinion Dynamics
 Andy Liu, Heather Zinn Brooks
 
-*In preparation* [[code]](https://github.com/andyjliu/Heterogeneous-Topic-Interdependencies)
+*Under preparation* [[code]](https://github.com/andyjliu/Heterogeneous-Topic-Interdependencies)
 
 {% if author.googlescholar %}
   You can also find my articles on <u><a href="{{author.googlescholar}}">my Google Scholar profile</a>.</u>
