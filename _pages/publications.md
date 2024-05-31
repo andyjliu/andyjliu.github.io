@@ -8,7 +8,7 @@ author_profile: true
 Andy Liu, Mona Diab, Daniel Fried
 
 *In Findings of the Association for Computational Linguistics: ACL 2024.*
-[pdf] 
+[[pdf]](https://arxiv.org/pdf/2405.20253.pdf) 
 [[code]](https://github.com/andyjliu/persona-steered-generation-bias)
 
 We study the task of persona-steered text generation, where models must generate text that reflects the distribution of views that an individual fitting a persona could have. We find models are worse at representing multifaceted personas whose dimensions are incongruous with each other, and that preference-based fine-tuning improves LLM steerability at the cost of diversity.
