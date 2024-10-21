@@ -21,6 +21,14 @@ Andy Liu, Emmy Liu, Hao Zhu, Yonatan Bisk, Graham Neubig
 
 We equip language-learning agents with theory of mind, operationalized as an internal model of a teacher agent that is trained alongside the learner. We find that both including ToM and increasing environment difficulty lead to improved language acquisition in an image referential game setting.
 
+## BIG5-CHAT: Shaping LLM Personalities Through Training on Human-Grounded Data
+Wenkai Li*, Jiarui Liu*, **Andy Liu**, Xuhui Zhou, Mona Diab, Maarten Sap
+
+*Arxiv Preprint.* [pdf] [code]
+
+We create a large-scale, human-grounded dialogue dataset that shows how social media users express their personality in text. We then align language models to various personality traits, finding that our methods outperform prompting on personality assessments and lead to models with similar trait-ability correlations to human studies on downstream tasks.
+
+
 {% if author.googlescholar %}
   You can also find my articles on <u><a href="{{author.googlescholar}}">my Google Scholar profile</a>.</u>
 {% endif %}
