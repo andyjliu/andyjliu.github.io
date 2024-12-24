@@ -23,6 +23,7 @@ We equip language-learning agents with theory of mind, operationalized as an int
 
 ## Dynamic Coalition Structure Detection in Natural Language-based Interactions
 **Andy Liu\***, Abhishek Kulkarni\*, Jean-Raphaël Gaglione, Daniel Fried, Ufuk Topcu
+
 *To Appear in The 23rd International Conference on Autonomous Agents and Multi-Agent Systems, 2025.*
 
 We present a novel framework combining language models and game theory to predict coalition formation in Diplomacy by analyzing natural language negotiations between players. By evaluating both the content of agreements and players' strategic incentives to honor them, we can effectively identify which coalitions are likely to be negotiated and upheld during gameplay.
