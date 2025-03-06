@@ -33,4 +33,4 @@ I’m broadly interested in evaluations, social intelligence, and value pluralis
 * How can we better control language agents' behavior according to the preferences of diverse principals?
 * How can we best evaluate social intelligence and theory of mind in language technologies?
 
-Feel free to reach out at **andyliu@andrew.cmu.edu** if you’re interested in my work or in collaborating!
+Feel free to reach out if you’re interested in my work or in collaborating!
