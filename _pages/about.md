@@ -23,8 +23,6 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-## About Me
-
 I am a second-year PhD student at the Language Technologies Institute within Carnegie Mellon University’s School of Computer Science, advised by [Mona Diab](https://www.lti.cs.cmu.edu/people/faculty/diab-mona.html) and [Daniel Fried](https://dpfried.github.io/). Before joining LTI, I graduated with a B.S. in Math and Computer Science from Harvey Mudd College, where I worked with [Calden Wloka](https://www.caldenwloka.com/) and [Heather Zinn Brooks](https://sites.google.com/g.hmc.edu/hzinnbrooks).
 
 I’m broadly interested in evaluations, social intelligence, and value pluralism, especially as they relate to language models. Some specific subquestions I’m currently interested in include:
