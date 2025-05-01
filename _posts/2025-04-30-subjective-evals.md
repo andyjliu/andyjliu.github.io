@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  when llms can write fiction, how will we know?
-date:   2024-04-30
+date:   2025-04-30
 description: on evals of subjective tasks
 tags: evals, llm
 ---
