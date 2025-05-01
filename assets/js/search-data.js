@@ -30,7 +30,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "books-the-godfather",
+        },{id: "post-when-llms-can-write-fiction-how-will-we-know",
+      
+        title: "when llms can write fiction, how will we know?",
+      
+      description: "on evals of subjective tasks",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2024/subjective-evals/";
+        
+      },
+    },{id: "books-the-godfather",
           title: 'The Godfather',
           description: "",
           section: "Books",handler: () => {
