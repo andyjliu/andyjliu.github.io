@@ -55,6 +55,9 @@ ninja.data = [{
           section: "News",},{id: "news-our-paper-on-dynamic-coalition-structure-detection-in-natural-language-based-interactions-was-accepted-to-aamas-2025-see-you-in-detroit",
           title: 'Our paper on Dynamic Coalition Structure Detection in Natural-Language-based Interactions was accepted to...',
           description: "",
+          section: "News",},{id: "news-i-was-awarded-a-2025-nsf-graduate-research-fellowship",
+          title: 'I was awarded a 2025 NSF Graduate Research Fellowship.',
+          description: "",
           section: "News",},{
         id: 'social-email',
         title: 'email',
