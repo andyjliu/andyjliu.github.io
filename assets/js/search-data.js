@@ -58,6 +58,9 @@ ninja.data = [{
           section: "News",},{id: "news-i-was-awarded-a-2025-nsf-graduate-research-fellowship",
           title: 'I was awarded a 2025 NSF Graduate Research Fellowship.',
           description: "",
+          section: "News",},{id: "news-i-ve-joined-meta-fair-in-seattle-as-a-research-intern-working-with-ruta-desai-on-training-collaborative-agents",
+          title: 'I’ve joined Meta FAIR in Seattle as a research intern, working with Ruta...',
+          description: "",
           section: "News",},{
         id: 'social-email',
         title: 'email',
