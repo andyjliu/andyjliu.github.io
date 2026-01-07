@@ -1,0 +1,46 @@
+name: Update Goodreads Reading
+
+on:
+  schedule:
+    # Run every 24 hours (at midnight UTC)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update-reading:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+      
+      - name: Setup Ruby 💎
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.5"
+          bundler-cache: true
+      
+      - name: Install dependencies
+        run: |
+          gem install httparty nokogiri json
+      
+      - name: Fetch and update Goodreads reading data
+        env:
+          GOODREADS_USER_ID: ${{ secrets.GOODREADS_USER_ID || '146493162' }}
+        run: |
+          ruby .github/scripts/update-goodreads-reading.rb
+      
+      - name: Check for changes and commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add _data/goodreads-reading.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update Goodreads reading data [skip ci]"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+

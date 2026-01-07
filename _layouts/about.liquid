@@ -40,6 +40,9 @@ layout: default
 
     <div class="clearfix">{{ content }}</div>
 
+    <!-- Currently Reading -->
+    {% include currently_reading.liquid %}
+
     <!-- News -->
     {% if page.announcements and page.announcements.enabled %}
       <h2>

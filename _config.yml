@@ -131,6 +131,14 @@ newsletter:
   # https://loops.so/docs/forms/custom-form
 
 # -----------------------------------------------------------------------------
+# Goodreads Reading
+# -----------------------------------------------------------------------------
+
+goodreads_reading:
+  enabled: true # enables displaying currently reading book on about page
+  user_id: 146493162 # your Goodreads user ID (found in your Goodreads profile URL)
+
+# -----------------------------------------------------------------------------
 # Collections
 # -----------------------------------------------------------------------------
 
