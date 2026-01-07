@@ -25,10 +25,9 @@ latest_posts:
 
 I am a third-year PhD student at the Language Technologies Institute within Carnegie Mellon University’s School of Computer Science, advised by [Mona Diab](https://www.lti.cs.cmu.edu/people/faculty/diab-mona.html) and [Daniel Fried](https://dpfried.github.io/). I am also currently interning at Meta FAIR, working with [Ruta Desai](https://rutadesai.github.io). My research is supported by the [NSF Graduate Fellowship](https://www.nsf.gov/funding/opportunities/grfp-nsf-graduate-research-fellowship-program).
 
-I’m broadly interested in evaluations, human-AI interaction, and value pluralism, especially as they relate to language models. Some specific subquestions I’m currently interested in include:
+I'm broadly interested in value alignment and human-AI interaction, especially in the context of language models. Some specific subquestions I’m currently interested in include:
+* How can we steer language models toward more fine-grained alignment targets?
+* How can we control the outcomes of multi-agent interaction involving LLM agents?
+Please reach out (email is best) if you’re interested in my work or in collaborating!
 
-* How can we evaluate and improve language models in more interactive settings?
-* How can we better control language agents' behavior according to the preferences of diverse principals?
-* How can we best evaluate social intelligence and theory of mind in language technologies?
-
-Feel free to reach out if you’re interested in my work or in collaborating!
+Outside of research, I enjoy running, bouldering, and writing.

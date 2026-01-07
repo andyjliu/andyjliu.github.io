@@ -40,8 +40,51 @@ layout: default
 
     <div class="clearfix">{{ content }}</div>
 
-    <!-- Currently Reading -->
-    {% include currently_reading.liquid %}
+    <!-- Currently Reading - inline with last paragraph -->
+    {% assign reading_data = site.data.goodreads_reading %}
+    {% if reading_data and reading_data.current_book %}
+      <script>
+        (function() {
+          const contentDiv = document.querySelector('.clearfix');
+          if (contentDiv) {
+            const paragraphs = contentDiv.querySelectorAll('p');
+            if (paragraphs.length > 0) {
+              const lastParagraph = paragraphs[paragraphs.length - 1];
+              const bookUrl = {{ reading_data.current_book.url | jsonify }};
+              const bookTitle = {{ reading_data.current_book.title | jsonify }};
+              const bookAuthor = {% if reading_data.current_book.author %}{{ reading_data.current_book.author | jsonify }}{% else %}null{% endif %};
+              let readingText = ' I am currently reading <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
+              if (bookAuthor) {
+                readingText += ' by ' + bookAuthor;
+              }
+              readingText += '.';
+              lastParagraph.innerHTML += ' ' + readingText;
+            }
+          }
+        })();
+      </script>
+    {% elsif reading_data and reading_data.last_read_book %}
+      <script>
+        (function() {
+          const contentDiv = document.querySelector('.clearfix');
+          if (contentDiv) {
+            const paragraphs = contentDiv.querySelectorAll('p');
+            if (paragraphs.length > 0) {
+              const lastParagraph = paragraphs[paragraphs.length - 1];
+              const bookUrl = {{ reading_data.last_read_book.url | jsonify }};
+              const bookTitle = {{ reading_data.last_read_book.title | jsonify }};
+              const bookAuthor = {% if reading_data.last_read_book.author %}{{ reading_data.last_read_book.author | jsonify }}{% else %}null{% endif %};
+              let readingText = ' I last read <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
+              if (bookAuthor) {
+                readingText += ' by ' + bookAuthor;
+              }
+              readingText += '.';
+              lastParagraph.innerHTML += ' ' + readingText;
+            }
+          }
+        })();
+      </script>
+    {% endif %}
 
     <!-- News -->
     {% if page.announcements and page.announcements.enabled %}
