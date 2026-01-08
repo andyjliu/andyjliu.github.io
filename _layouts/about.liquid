@@ -50,10 +50,10 @@ layout: default
             const paragraphs = contentDiv.querySelectorAll('p');
             if (paragraphs.length > 0) {
               const lastParagraph = paragraphs[paragraphs.length - 1];
-              const bookUrl = {{ reading_data.current_book.url | jsonify }};
+              const goodreadsShelfUrl = 'https://www.goodreads.com/review/list/146493162-andy-liu?shelf=currently-reading';
               const bookTitle = {{ reading_data.current_book.title | jsonify }};
               const bookAuthor = {% if reading_data.current_book.author %}{{ reading_data.current_book.author | jsonify }}{% else %}null{% endif %};
-              let readingText = ' I am currently reading <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
+              let readingText = ' I am currently reading <a href="' + goodreadsShelfUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
               if (bookAuthor) {
                 readingText += ' by ' + bookAuthor;
               }

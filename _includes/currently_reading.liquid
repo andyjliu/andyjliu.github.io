@@ -1,6 +1,6 @@
 {% assign reading_data = site.data.goodreads_reading %}
 {% if reading_data and reading_data.current_book %}
-  <p class="currently-reading">I am currently reading <a href="{{ reading_data.current_book.url }}" target="_blank" rel="external nofollow noopener">{{ reading_data.current_book.title }}</a>{% if reading_data.current_book.author %} by {{ reading_data.current_book.author }}{% endif %}.</p>
+  <p class="currently-reading">I am currently reading <a href="https://www.goodreads.com/review/list/146493162-andy-liu?shelf=currently-reading" target="_blank" rel="external nofollow noopener">{{ reading_data.current_book.title }}</a>{% if reading_data.current_book.author %} by {{ reading_data.current_book.author }}{% endif %}.</p>
 {% elsif reading_data and reading_data.last_read_book %}
   <p class="currently-reading">I last read <a href="{{ reading_data.last_read_book.url }}" target="_blank" rel="external nofollow noopener">{{ reading_data.last_read_book.title }}</a>{% if reading_data.last_read_book.author %} by {{ reading_data.last_read_book.author }}{% endif %}.</p>
 {% endif %}
