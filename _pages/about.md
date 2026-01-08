@@ -27,7 +27,9 @@ I am a third-year PhD student at the Language Technologies Institute within Carn
 
 I'm broadly interested in value alignment and human-AI interaction, especially in the context of language models. Some specific subquestions I’m currently interested in include:
 * How can we steer language models toward more fine-grained alignment targets?
-* How can we control the outcomes of multi-agent interaction involving LLM agents?
+* What are the best ways to train agents to collaborate with users and task partners?
+* How can we effectively oversee real-world interactions between many LLM agents?
+
 Please reach out (email is best) if you’re interested in my work or in collaborating!
 
 Outside of research, I enjoy running, bouldering, and writing.
