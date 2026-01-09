@@ -91,7 +91,7 @@ end
 new_data = {
   'current_book' => current_book,
   'last_read_book' => last_read_book,
-  'last_updated' => Time.now.utc.iso8601
+  'last_updated' => Time.now.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
 }
 
 # Check if data has changed
