@@ -1,10 +1,10 @@
 {
-  "current_book": {
+  "current_book": null,
+  "last_read_book": {
     "title": "Technology and the Rise of Great Powers: How Diffusion Shapes Economic Competition (Princeton Studies in International History and Politics)",
     "author": "Jeffrey Ding",
     "url": "https://www.goodreads.com/book/show/200449388",
     "book_id": "200449388"
   },
-  "last_read_book": null,
-  "last_updated": "2026-01-16T02:11:42Z"
+  "last_updated": "2026-01-17T02:05:24Z"
 }
