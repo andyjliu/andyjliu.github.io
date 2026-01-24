@@ -10,6 +10,13 @@ USER_ID = ENV['GOODREADS_USER_ID'] || '146493162'
 DATA_DIR = '_data'
 DATA_FILE = File.join(DATA_DIR, 'goodreads-reading.json')
 
+def clean_title(title)
+  # Remove parenthetical phrases at the end of titles
+  # Examples: "(Firefall, #1)" or "(Princeton Studies in International History and Politics)"
+  # This removes trailing parentheticals that Goodreads adds for series info, publication series, etc.
+  title.gsub(/\s*\([^)]+\)\s*$/, '').strip
+end
+
 def extract_first_book_from_xml(xml)
   doc = Nokogiri::XML(xml) do |config|
     config.nonet.noblanks
@@ -21,7 +28,8 @@ def extract_first_book_from_xml(xml)
 
   # Extract book information (handle CDATA and HTML entities)
   title_node = first_item.xpath('title').first
-  title = title_node ? title_node.text.strip : ''
+  raw_title = title_node ? title_node.text.strip : ''
+  title = clean_title(raw_title)
   
   author_node = first_item.xpath('author_name').first
   author = author_node ? author_node.text.strip : ''
