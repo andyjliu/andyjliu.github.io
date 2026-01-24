@@ -1,0 +1,59 @@
+name: Manual Deploy Trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual deployment'
+        required: false
+        default: 'Manual deployment requested'
+        type: string
+      force_rebuild:
+        description: 'Force full rebuild (clear caches)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  manual-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log deployment trigger
+        run: |
+          echo "🚀 Manual deployment triggered"
+          echo "Reason: ${{ github.event.inputs.reason }}"
+          echo "Force rebuild: ${{ github.event.inputs.force_rebuild }}"
+          echo "Triggered by: ${{ github.actor }}"
+      
+      - name: Trigger main deployment workflow
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const result = await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy.yml',
+              ref: 'main',
+              inputs: {
+                manual_trigger: 'true',
+                reason: '${{ github.event.inputs.reason }}',
+                force_rebuild: '${{ github.event.inputs.force_rebuild }}'
+              }
+            });
+            console.log('✅ Main deployment workflow triggered successfully');
+            
+            // Also log to step summary
+            await core.summary
+              .addHeading('🚀 Manual Deployment Triggered')
+              .addTable([
+                [{data: 'Property', header: true}, {data: 'Value', header: true}],
+                ['Reason', '${{ github.event.inputs.reason }}'],
+                ['Force Rebuild', '${{ github.event.inputs.force_rebuild }}'],
+                ['Triggered By', '${{ github.actor }}'],
+                ['Timestamp', new Date().toISOString()]
+              ])
+              .addLink('View Deployment Status', `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/workflows/deploy.yml`)
+              .write();

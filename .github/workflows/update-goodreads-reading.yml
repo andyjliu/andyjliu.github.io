@@ -47,7 +47,8 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "Update Goodreads reading data"
             git push
+            echo "✅ Goodreads data updated and committed"
           else
-            echo "No changes to commit"
+            echo "ℹ️ No changes to commit - data unchanged"
           fi
 
