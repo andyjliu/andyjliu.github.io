@@ -1,10 +1,10 @@
 {
-  "current_book": {
+  "current_book": null,
+  "last_read_book": {
     "title": "Blindsight",
     "author": "Peter Watts",
     "url": "https://www.goodreads.com/book/show/48484",
     "book_id": "48484"
   },
-  "last_read_book": null,
-  "last_updated": "2026-01-30T02:36:56Z"
+  "last_updated": "2026-01-31T02:32:05Z"
 }
