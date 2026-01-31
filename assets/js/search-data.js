@@ -61,6 +61,9 @@ ninja.data = [{
           section: "News",},{id: "news-i-ve-joined-meta-fair-in-seattle-as-a-research-intern-working-with-ruta-desai-on-training-collaborative-agents",
           title: 'I’ve joined Meta FAIR in Seattle as a research intern, working with Ruta...',
           description: "",
+          section: "News",},{id: "news-generative-value-conflicts-reveal-llm-priorities-was-accepted-to-iclr-2026-see-you-in-brazil",
+          title: 'Generative Value Conflicts Reveal LLM Priorities was accepted to ICLR 2026. See you...',
+          description: "",
           section: "News",},{
         id: 'social-email',
         title: 'email',
