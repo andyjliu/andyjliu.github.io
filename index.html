@@ -10,10 +10,10 @@
               
               // Book data
               
-                const bookUrl = "https://www.goodreads.com/book/show/48484";
-                const bookTitle = "Blindsight";
-                const bookAuthor = "Peter Watts";
-                let readingText = ' I last read <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
+                const goodreadsShelfUrl = 'https://www.goodreads.com/review/list/146493162-andy-liu?shelf=currently-reading';
+                const bookTitle = "Reasons and Persons";
+                const bookAuthor = "Derek Parfit";
+                let readingText = ' I am currently reading <a href="' + goodreadsShelfUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
                 if (bookAuthor) {
                   readingText += ' by ' + bookAuthor;
                 }
