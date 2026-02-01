@@ -1,0 +1,66 @@
+name: Update Last.fm Top Artist
+
+on:
+  schedule:
+    # Runs daily at 6:00 AM UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update-lastfm:
+    # Skip if this workflow was triggered by a push event from its own commit
+    # (This is a safety measure in case push triggers are added later)
+    if: |
+      github.event_name != 'push' || (
+        github.event.head_commit.author.name != 'github-actions[bot]' &&
+        !startsWith(github.event.head_commit.message, 'Update Last.fm top artist')
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch Last.fm top artist
+        env:
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+        run: |
+          # Fetch top artist for the last 7 days
+          RESPONSE=$(curl -s "http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=uilydna&period=7day&limit=1&api_key=${LASTFM_API_KEY}&format=json")
+          
+          # Check if we got a valid response with artists
+          ARTIST=$(echo "$RESPONSE" | jq -r '.topartists.artist[0].name // empty')
+          
+          if [ -z "$ARTIST" ]; then
+            echo "No artist data returned or API error. Exiting without changes."
+            exit 0
+          fi
+          
+          URL=$(echo "$RESPONSE" | jq -r '.topartists.artist[0].url')
+          TODAY=$(date -u +"%Y-%m-%d")
+          
+          # Write to data file
+          cat > _data/lastfm.yml << EOF
+          artist: "${ARTIST}"
+          url: "${URL}"
+          profile: "https://www.last.fm/user/uilydna"
+          updated: "${TODAY}"
+          EOF
+          
+          echo "Updated with artist: $ARTIST"
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add _data/lastfm.yml
+          if ! git diff --cached --quiet; then
+            git commit -m "Update Last.fm top artist"
+            git push
+            echo "✅ Last.fm data updated and committed"
+          else
+            echo "ℹ️ No changes to commit - data unchanged"
+          fi
+

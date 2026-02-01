@@ -40,9 +40,10 @@ layout: default
 
     <div class="clearfix">{{ content }}</div>
 
-    <!-- Currently Reading - inline with last paragraph -->
+    <!-- Currently Reading and Listening - inline with last paragraph -->
     {% assign reading_data = site.data.goodreads_reading %}
-    {% if reading_data and reading_data.current_book %}
+    {% assign lastfm_data = site.data.lastfm %}
+    {% if reading_data and (reading_data.current_book or reading_data.last_read_book) and lastfm_data and lastfm_data.artist %}
       <script>
         (function() {
           const contentDiv = document.querySelector('.clearfix');
@@ -50,20 +51,37 @@ layout: default
             const paragraphs = contentDiv.querySelectorAll('p');
             if (paragraphs.length > 0) {
               const lastParagraph = paragraphs[paragraphs.length - 1];
-              const goodreadsShelfUrl = 'https://www.goodreads.com/review/list/146493162-andy-liu?shelf=currently-reading';
-              const bookTitle = {{ reading_data.current_book.title | jsonify }};
-              const bookAuthor = {% if reading_data.current_book.author %}{{ reading_data.current_book.author | jsonify }}{% else %}null{% endif %};
-              let readingText = ' I am currently reading <a href="' + goodreadsShelfUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
-              if (bookAuthor) {
-                readingText += ' by ' + bookAuthor;
-              }
-              readingText += '.';
-              lastParagraph.innerHTML += ' ' + readingText;
+              
+              // Book data
+              {% if reading_data.current_book %}
+                const goodreadsShelfUrl = 'https://www.goodreads.com/review/list/146493162-andy-liu?shelf=currently-reading';
+                const bookTitle = {{ reading_data.current_book.title | jsonify }};
+                const bookAuthor = {% if reading_data.current_book.author %}{{ reading_data.current_book.author | jsonify }}{% else %}null{% endif %};
+                let readingText = ' I am currently reading <a href="' + goodreadsShelfUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
+                if (bookAuthor) {
+                  readingText += ' by ' + bookAuthor;
+                }
+              {% elsif reading_data.last_read_book %}
+                const bookUrl = {{ reading_data.last_read_book.url | jsonify }};
+                const bookTitle = {{ reading_data.last_read_book.title | jsonify }};
+                const bookAuthor = {% if reading_data.last_read_book.author %}{{ reading_data.last_read_book.author | jsonify }}{% else %}null{% endif %};
+                let readingText = ' I last read <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
+                if (bookAuthor) {
+                  readingText += ' by ' + bookAuthor;
+                }
+              {% endif %}
+              
+              // Last.fm data
+              const artistName = {{ lastfm_data.artist | jsonify }};
+              const profileUrl = {{ lastfm_data.profile | jsonify }};
+              const listeningText = ' and am listening to <a href="' + profileUrl + '" target="_blank" rel="external nofollow noopener">' + artistName + '</a>';
+              
+              lastParagraph.innerHTML += ' ' + readingText + listeningText + '.';
             }
           }
         })();
       </script>
-    {% elsif reading_data and reading_data.last_read_book %}
+    {% elsif reading_data and (reading_data.current_book or reading_data.last_read_book) %}
       <script>
         (function() {
           const contentDiv = document.querySelector('.clearfix');
@@ -71,15 +89,27 @@ layout: default
             const paragraphs = contentDiv.querySelectorAll('p');
             if (paragraphs.length > 0) {
               const lastParagraph = paragraphs[paragraphs.length - 1];
-              const bookUrl = {{ reading_data.last_read_book.url | jsonify }};
-              const bookTitle = {{ reading_data.last_read_book.title | jsonify }};
-              const bookAuthor = {% if reading_data.last_read_book.author %}{{ reading_data.last_read_book.author | jsonify }}{% else %}null{% endif %};
-              let readingText = ' I last read <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
-              if (bookAuthor) {
-                readingText += ' by ' + bookAuthor;
-              }
-              readingText += '.';
-              lastParagraph.innerHTML += ' ' + readingText;
+              {% if reading_data.current_book %}
+                const goodreadsShelfUrl = 'https://www.goodreads.com/review/list/146493162-andy-liu?shelf=currently-reading';
+                const bookTitle = {{ reading_data.current_book.title | jsonify }};
+                const bookAuthor = {% if reading_data.current_book.author %}{{ reading_data.current_book.author | jsonify }}{% else %}null{% endif %};
+                let readingText = ' I am currently reading <a href="' + goodreadsShelfUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
+                if (bookAuthor) {
+                  readingText += ' by ' + bookAuthor;
+                }
+                readingText += '.';
+                lastParagraph.innerHTML += ' ' + readingText;
+              {% elsif reading_data.last_read_book %}
+                const bookUrl = {{ reading_data.last_read_book.url | jsonify }};
+                const bookTitle = {{ reading_data.last_read_book.title | jsonify }};
+                const bookAuthor = {% if reading_data.last_read_book.author %}{{ reading_data.last_read_book.author | jsonify }}{% else %}null{% endif %};
+                let readingText = ' I last read <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
+                if (bookAuthor) {
+                  readingText += ' by ' + bookAuthor;
+                }
+                readingText += '.';
+                lastParagraph.innerHTML += ' ' + readingText;
+              {% endif %}
             }
           }
         })();
