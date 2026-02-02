@@ -54,10 +54,10 @@ layout: default
               
               // Book data
               {% if reading_data.current_book %}
-                const goodreadsShelfUrl = 'https://www.goodreads.com/review/list/146493162-andy-liu?shelf=currently-reading';
+                const bookUrl = {{ reading_data.current_book.url | jsonify }};
                 const bookTitle = {{ reading_data.current_book.title | jsonify }};
                 const bookAuthor = {% if reading_data.current_book.author %}{{ reading_data.current_book.author | jsonify }}{% else %}null{% endif %};
-                let readingText = ' I am currently reading <a href="' + goodreadsShelfUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
+                let readingText = ' I am currently reading <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
                 if (bookAuthor) {
                   readingText += ' by ' + bookAuthor;
                 }
@@ -73,8 +73,8 @@ layout: default
               
               // Last.fm data
               const artistName = {{ lastfm_data.artist | jsonify }};
-              const profileUrl = {{ lastfm_data.profile | jsonify }};
-              const listeningText = ' and am listening to <a href="' + profileUrl + '" target="_blank" rel="external nofollow noopener">' + artistName + '</a>';
+              const artistUrl = {{ lastfm_data.url | jsonify }};
+              const listeningText = ' and listening to <a href="' + artistUrl + '" target="_blank" rel="external nofollow noopener">' + artistName + '</a>';
               
               lastParagraph.innerHTML += ' ' + readingText + listeningText + '.';
             }
@@ -90,10 +90,10 @@ layout: default
             if (paragraphs.length > 0) {
               const lastParagraph = paragraphs[paragraphs.length - 1];
               {% if reading_data.current_book %}
-                const goodreadsShelfUrl = 'https://www.goodreads.com/review/list/146493162-andy-liu?shelf=currently-reading';
+                const bookUrl = {{ reading_data.current_book.url | jsonify }};
                 const bookTitle = {{ reading_data.current_book.title | jsonify }};
                 const bookAuthor = {% if reading_data.current_book.author %}{{ reading_data.current_book.author | jsonify }}{% else %}null{% endif %};
-                let readingText = ' I am currently reading <a href="' + goodreadsShelfUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
+                let readingText = ' I am currently reading <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
                 if (bookAuthor) {
                   readingText += ' by ' + bookAuthor;
                 }
