@@ -10,10 +10,10 @@
               
               // Book data
               
-                const goodreadsShelfUrl = 'https://www.goodreads.com/review/list/146493162-andy-liu?shelf=currently-reading';
+                const bookUrl = "https://www.goodreads.com/book/show/327051";
                 const bookTitle = "Reasons and Persons";
                 const bookAuthor = "Derek Parfit";
-                let readingText = ' I am currently reading <a href="' + goodreadsShelfUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
+                let readingText = ' I am currently reading <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
                 if (bookAuthor) {
                   readingText += ' by ' + bookAuthor;
                 }
@@ -21,8 +21,8 @@
               
               // Last.fm data
               const artistName = "Ninajirachi";
-              const profileUrl = "https://www.last.fm/user/uilydna";
-              const listeningText = ' and am listening to <a href="' + profileUrl + '" target="_blank" rel="external nofollow noopener">' + artistName + '</a>';
+              const artistUrl = "https://www.last.fm/music/Ninajirachi";
+              const listeningText = ' and listening to <a href="' + artistUrl + '" target="_blank" rel="external nofollow noopener">' + artistName + '</a>';
               
               lastParagraph.innerHTML += ' ' + readingText + listeningText + '.';
             }
