@@ -1,10 +1,10 @@
 {
-  "current_book": null,
-  "last_read_book": {
-    "title": "Reasons and Persons",
-    "author": "Derek Parfit",
-    "url": "https://www.goodreads.com/book/show/327051",
-    "book_id": "327051"
+  "current_book": {
+    "title": "Too Like the Lightning",
+    "author": "Ada Palmer",
+    "url": "https://www.goodreads.com/book/show/26114545",
+    "book_id": "26114545"
   },
-  "last_updated": "2026-03-29T03:19:54Z"
+  "last_read_book": null,
+  "last_updated": "2026-03-30T03:21:34Z"
 }
