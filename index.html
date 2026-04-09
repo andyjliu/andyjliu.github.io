@@ -32,8 +32,8 @@
               .map(function (line) {
                 return '<span class="reading-tooltip-line">' + line + '</span>';
               })
-              .join('<br>');
-            return '<em>Previously:</em><br>' + rows;
+              .join('');
+            return '<em>Previously:</em>' + rows;
           }
 
           document.addEventListener('DOMContentLoaded', function () {
