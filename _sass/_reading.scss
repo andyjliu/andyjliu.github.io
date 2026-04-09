@@ -1,0 +1,62 @@
+/*******************************************************************************
+ * Currently reading / Last.fm tooltip (about page)
+ ******************************************************************************/
+
+.reading-hover {
+  cursor: help;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--global-theme-color);
+  padding-bottom: 1px;
+
+  &:focus-visible {
+    outline: 2px solid var(--global-theme-color);
+    outline-offset: 2px;
+  }
+}
+
+.reading-tooltip {
+  &.bs-tooltip-top .arrow::before {
+    border-top-color: var(--global-card-bg-color);
+  }
+
+  &.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: var(--global-card-bg-color);
+  }
+
+  &.bs-tooltip-left .arrow::before {
+    border-left-color: var(--global-card-bg-color);
+  }
+
+  &.bs-tooltip-right .arrow::before {
+    border-right-color: var(--global-card-bg-color);
+  }
+
+  .tooltip-inner {
+    font-family: inherit;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    text-align: left;
+    padding: 0.65rem 1rem;
+    color: var(--global-text-color);
+    background-color: var(--global-card-bg-color);
+    border: 1px solid var(--global-divider-color);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+    width: max-content;
+    min-width: 12rem;
+    max-width: min(92vw, 36rem);
+
+    em {
+      font-style: italic;
+      color: var(--global-text-color-light);
+    }
+
+    .reading-tooltip-line {
+      display: block;
+      white-space: nowrap;
+    }
+  }
+}
+
+html[data-theme="dark"] .reading-tooltip .tooltip-inner {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
