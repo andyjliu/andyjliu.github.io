@@ -22,9 +22,18 @@
             return out;
           }
 
+          var readingTooltipTemplate =
+            '<div class="tooltip reading-tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>';
+
           function previousTooltipHtml(lines) {
             if (!lines || !lines.length) return null;
-            return 'Previously:<br>' + lines.map(escapeHtml).join('<br>');
+            var rows = lines
+              .map(escapeHtml)
+              .map(function (line) {
+                return '<span class="reading-tooltip-line">' + line + '</span>';
+              })
+              .join('<br>');
+            return '<em>Previously:</em><br>' + rows;
           }
 
           document.addEventListener('DOMContentLoaded', function () {
@@ -49,11 +58,21 @@
 
             const readingLead = " I am currently reading ";
 
-            const $book = $('<span tabindex="0">').text(bookTitle);
             const bookTip = previousTooltipHtml(previousBookTitles);
+            const $bookPhrase = $('<span>');
             if (bookTip) {
-              $book.addClass('reading-hover').attr('style', 'cursor: help; text-decoration: underline dotted;');
-              $book.tooltip({ html: true, title: bookTip });
+              $bookPhrase.attr('tabindex', '0');
+              $bookPhrase.addClass('reading-hover');
+              $bookPhrase.tooltip({
+                html: true,
+                title: bookTip,
+                template: readingTooltipTemplate,
+                container: 'body',
+              });
+            }
+            $bookPhrase.append(document.createTextNode(bookTitle));
+            if (bookAuthor) {
+              $bookPhrase.append(document.createTextNode(' by ' + bookAuthor));
             }
 
             let $artist = null;
@@ -62,16 +81,18 @@
               const artistTip = previousTooltipHtml(artistLines);
               $artist = $('<span tabindex="0">').text(artistName);
               if (artistTip) {
-                $artist.addClass('reading-hover').attr('style', 'cursor: help; text-decoration: underline dotted;');
-                $artist.tooltip({ html: true, title: artistTip });
+                $artist.addClass('reading-hover');
+                $artist.tooltip({
+                  html: true,
+                  title: artistTip,
+                  template: readingTooltipTemplate,
+                  container: 'body',
+                });
               }
             }
 
             $(lastParagraph).append(document.createTextNode(readingLead));
-            $(lastParagraph).append($book);
-            if (bookAuthor) {
-              $(lastParagraph).append(document.createTextNode(' by ' + bookAuthor));
-            }
+            $(lastParagraph).append($bookPhrase);
             if ($artist) {
               $(lastParagraph).append(document.createTextNode(' and listening to '));
               $(lastParagraph).append($artist);
