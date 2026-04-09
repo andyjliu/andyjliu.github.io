@@ -43,75 +43,97 @@ layout: default
     <!-- Currently Reading and Listening - inline with last paragraph -->
     {% assign reading_data = site.data.goodreads_reading %}
     {% assign lastfm_data = site.data.lastfm %}
-    {% if reading_data and (reading_data.current_book or reading_data.last_read_book) and lastfm_data and lastfm_data.artist %}
+    {% assign has_lastfm = false %}
+    {% if lastfm_data and lastfm_data.artist %}
+      {% assign has_lastfm = true %}
+    {% endif %}
+    {% if reading_data and (reading_data.current_book or reading_data.last_read_book) %}
+      {% if reading_data.current_book %}
+        {% assign reading_lead = " I am currently reading " %}
+      {% else %}
+        {% assign reading_lead = " I last read " %}
+      {% endif %}
       <script>
-        (function() {
-          const contentDiv = document.querySelector('.clearfix');
-          if (contentDiv) {
-            const paragraphs = contentDiv.querySelectorAll('p');
-            if (paragraphs.length > 0) {
-              const lastParagraph = paragraphs[paragraphs.length - 1];
-              
-              // Book data
-              {% if reading_data.current_book %}
-                const bookUrl = {{ reading_data.current_book.url | jsonify }};
-                const bookTitle = {{ reading_data.current_book.title | jsonify }};
-                const bookAuthor = {% if reading_data.current_book.author %}{{ reading_data.current_book.author | jsonify }}{% else %}null{% endif %};
-                let readingText = ' I am currently reading <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
-                if (bookAuthor) {
-                  readingText += ' by ' + bookAuthor;
-                }
-              {% elsif reading_data.last_read_book %}
-                const bookUrl = {{ reading_data.last_read_book.url | jsonify }};
-                const bookTitle = {{ reading_data.last_read_book.title | jsonify }};
-                const bookAuthor = {% if reading_data.last_read_book.author %}{{ reading_data.last_read_book.author | jsonify }}{% else %}null{% endif %};
-                let readingText = ' I last read <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
-                if (bookAuthor) {
-                  readingText += ' by ' + bookAuthor;
-                }
-              {% endif %}
-              
-              // Last.fm data
-              const artistName = {{ lastfm_data.artist | jsonify }};
-              const artistUrl = {{ lastfm_data.url | jsonify }};
-              const listeningText = ' and listening to <a href="' + artistUrl + '" target="_blank" rel="external nofollow noopener">' + artistName + '</a>';
-              
-              lastParagraph.innerHTML += ' ' + readingText + listeningText + '.';
-            }
+        (function () {
+          function escapeHtml(s) {
+            return String(s)
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;');
           }
-        })();
-      </script>
-    {% elsif reading_data and (reading_data.current_book or reading_data.last_read_book) %}
-      <script>
-        (function() {
-          const contentDiv = document.querySelector('.clearfix');
-          if (contentDiv) {
-            const paragraphs = contentDiv.querySelectorAll('p');
-            if (paragraphs.length > 0) {
-              const lastParagraph = paragraphs[paragraphs.length - 1];
-              {% if reading_data.current_book %}
-                const bookUrl = {{ reading_data.current_book.url | jsonify }};
-                const bookTitle = {{ reading_data.current_book.title | jsonify }};
-                const bookAuthor = {% if reading_data.current_book.author %}{{ reading_data.current_book.author | jsonify }}{% else %}null{% endif %};
-                let readingText = ' I am currently reading <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
-                if (bookAuthor) {
-                  readingText += ' by ' + bookAuthor;
-                }
-                readingText += '.';
-                lastParagraph.innerHTML += ' ' + readingText;
-              {% elsif reading_data.last_read_book %}
-                const bookUrl = {{ reading_data.last_read_book.url | jsonify }};
-                const bookTitle = {{ reading_data.last_read_book.title | jsonify }};
-                const bookAuthor = {% if reading_data.last_read_book.author %}{{ reading_data.last_read_book.author | jsonify }}{% else %}null{% endif %};
-                let readingText = ' I last read <a href="' + bookUrl + '" target="_blank" rel="external nofollow noopener">' + bookTitle + '</a>';
-                if (bookAuthor) {
-                  readingText += ' by ' + bookAuthor;
-                }
-                readingText += '.';
-                lastParagraph.innerHTML += ' ' + readingText;
-              {% endif %}
+
+          function dedupePreservingOrder(items) {
+            if (!items || !items.length) return [];
+            const seen = new Set();
+            const out = [];
+            for (let i = 0; i < items.length; i++) {
+              if (seen.has(items[i])) continue;
+              seen.add(items[i]);
+              out.push(items[i]);
             }
+            return out;
           }
+
+          function previousTooltipHtml(lines) {
+            if (!lines || !lines.length) return null;
+            return 'Previously:<br>' + lines.map(escapeHtml).join('<br>');
+          }
+
+          document.addEventListener('DOMContentLoaded', function () {
+            if (typeof jQuery === 'undefined') return;
+            var $ = jQuery;
+
+            const contentDiv = document.querySelector('.clearfix');
+            if (!contentDiv) return;
+            const paragraphs = contentDiv.querySelectorAll('p');
+            if (paragraphs.length === 0) return;
+            const lastParagraph = paragraphs[paragraphs.length - 1];
+
+            const bookTitle = {% if reading_data.current_book %}{{ reading_data.current_book.title | jsonify }}{% else %}{{ reading_data.last_read_book.title | jsonify }}{% endif %};
+            const bookAuthor = {% if reading_data.current_book %}{% if reading_data.current_book.author %}{{ reading_data.current_book.author | jsonify }}{% else %}null{% endif %}{% else %}{% if reading_data.last_read_book.author %}{{ reading_data.last_read_book.author | jsonify }}{% else %}null{% endif %}{% endif %};
+
+            const previousBookTitles = {{ reading_data.previous_book_titles | jsonify }} || [];
+            const hasLastfm = {{ has_lastfm | jsonify }};
+            {% if has_lastfm %}
+            const previousArtists = {{ lastfm_data.previous_artists | jsonify }} || [];
+            const artistName = {{ lastfm_data.artist | jsonify }};
+            {% else %}
+            const previousArtists = [];
+            const artistName = null;
+            {% endif %}
+
+            const readingLead = {{ reading_lead | jsonify }};
+
+            const $book = $('<span tabindex="0">').text(bookTitle);
+            const bookTip = previousTooltipHtml(previousBookTitles);
+            if (bookTip) {
+              $book.addClass('reading-hover').attr('style', 'cursor: help; text-decoration: underline dotted;');
+              $book.tooltip({ html: true, title: bookTip });
+            }
+
+            let $artist = null;
+            if (hasLastfm && artistName) {
+              const artistLines = dedupePreservingOrder(previousArtists);
+              const artistTip = previousTooltipHtml(artistLines);
+              $artist = $('<span tabindex="0">').text(artistName);
+              if (artistTip) {
+                $artist.addClass('reading-hover').attr('style', 'cursor: help; text-decoration: underline dotted;');
+                $artist.tooltip({ html: true, title: artistTip });
+              }
+            }
+
+            $(lastParagraph).append(document.createTextNode(readingLead));
+            $(lastParagraph).append($book);
+            if (bookAuthor) {
+              $(lastParagraph).append(document.createTextNode(' by ' + bookAuthor));
+            }
+            if ($artist) {
+              $(lastParagraph).append(document.createTextNode(' and listening to '));
+              $(lastParagraph).append($artist);
+            }
+            $(lastParagraph).append(document.createTextNode('.'));
+          });
         })();
       </script>
     {% endif %}

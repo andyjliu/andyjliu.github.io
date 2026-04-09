@@ -1,4 +1,9 @@
-artist: "Eden"
-url: "https://www.last.fm/music/Eden"
-profile: "https://www.last.fm/user/uilydna"
-updated: "2026-04-09"
+---
+artist: Eden
+url: https://www.last.fm/music/Eden
+profile: https://www.last.fm/user/uilydna
+updated: '2026-04-09'
+previous_artists:
+- Baby Keem
+- DROELOE
+- Vince Staples
