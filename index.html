@@ -52,8 +52,8 @@
             const previousBookTitles = ["Reasons and Persons","Blindsight","Technology and the Rise of Great Powers"] || [];
             const hasLastfm = true;
             
-            const previousArtists = ["DROELOE","Eden","Baby Keem"] || [];
-            const artistName = "Eden";
+            const previousArtists = ["Eden","DROELOE","Baby Keem"] || [];
+            const artistName = "Ninajirachi";
             
 
             const readingLead = " I am currently reading ";
@@ -77,7 +77,9 @@
 
             let $artist = null;
             if (hasLastfm && artistName) {
-              const artistLines = dedupePreservingOrder(previousArtists);
+              const artistLines = dedupePreservingOrder(previousArtists).filter(function (a) {
+                return a !== artistName;
+              });
               const artistTip = previousTooltipHtml(artistLines);
               $artist = $('<span tabindex="0">').text(artistName);
               if (artistTip) {
