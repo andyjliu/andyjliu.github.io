@@ -133,7 +133,9 @@ layout: default
 
             let $artist = null;
             if (hasLastfm && artistName) {
-              const artistLines = dedupePreservingOrder(previousArtists);
+              const artistLines = dedupePreservingOrder(previousArtists).filter(function (a) {
+                return a !== artistName;
+              });
               const artistTip = previousTooltipHtml(artistLines);
               $artist = $('<span tabindex="0">').text(artistName);
               if (artistTip) {
