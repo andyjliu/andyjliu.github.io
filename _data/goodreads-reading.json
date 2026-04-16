@@ -1,15 +1,15 @@
 {
-  "current_book": {
+  "current_book": null,
+  "last_read_book": {
     "title": "Too Like the Lightning",
     "author": "Ada Palmer",
     "url": "https://www.goodreads.com/book/show/26114545",
     "book_id": "26114545"
   },
-  "last_read_book": null,
   "previous_book_titles": [
+    "Too Like the Lightning",
     "Reasons and Persons",
-    "Blindsight",
-    "Technology and the Rise of Great Powers"
+    "Blindsight"
   ],
-  "last_updated": "2026-04-15T03:22:34Z"
+  "last_updated": "2026-04-16T03:30:52Z"
 }
