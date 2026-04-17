@@ -49,7 +49,7 @@
             const bookTitle = "Too Like the Lightning";
             const bookAuthor = "Ada Palmer";
 
-            const previousBookTitles = ["Too Like the Lightning","Reasons and Persons","Blindsight"] || [];
+            const previousBookTitlesRaw = ["Too Like the Lightning","Reasons and Persons","Blindsight"] || [];
             const hasLastfm = true;
             
             const previousArtists = ["Eden","DROELOE","Baby Keem"] || [];
@@ -58,6 +58,9 @@
 
             const readingLead = " I am currently reading ";
 
+            const previousBookTitles = dedupePreservingOrder(previousBookTitlesRaw).filter(function (t) {
+              return t && t !== bookTitle;
+            });
             const bookTip = previousTooltipHtml(previousBookTitles);
             const $bookPhrase = $('<span>');
             if (bookTip) {
