@@ -98,7 +98,7 @@ layout: default
             const bookTitle = {% if reading_data.current_book %}{{ reading_data.current_book.title | jsonify }}{% else %}{{ reading_data.last_read_book.title | jsonify }}{% endif %};
             const bookAuthor = {% if reading_data.current_book %}{% if reading_data.current_book.author %}{{ reading_data.current_book.author | jsonify }}{% else %}null{% endif %}{% else %}{% if reading_data.last_read_book.author %}{{ reading_data.last_read_book.author | jsonify }}{% else %}null{% endif %}{% endif %};
 
-            const previousBookTitles = {{ reading_data.previous_book_titles | jsonify }} || [];
+            const previousBookTitlesRaw = {{ reading_data.previous_book_titles | jsonify }} || [];
             const hasLastfm = {{ has_lastfm | jsonify }};
             {% if has_lastfm %}
             const previousArtists = {{ lastfm_data.previous_artists | jsonify }} || [];
@@ -110,6 +110,9 @@ layout: default
 
             const readingLead = {{ reading_lead | jsonify }};
 
+            const previousBookTitles = dedupePreservingOrder(previousBookTitlesRaw).filter(function (t) {
+              return t && t !== bookTitle;
+            });
             const bookTip = previousTooltipHtml(previousBookTitles);
             const $bookPhrase = $('<span>');
             if (bookTip) {
