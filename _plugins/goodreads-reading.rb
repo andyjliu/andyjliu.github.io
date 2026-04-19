@@ -34,8 +34,13 @@ module GoodreadsReading
         end
       end
 
-      # If cache file doesn't exist or parsing failed, fetch live
-      if current_book.nil? && last_read_book.nil?
+      # If cache file doesn't exist or parsing failed, fetch live.
+      #
+      # Important: we intentionally do NOT derive `last_read_book` from the "read"
+      # shelf RSS feed, because Goodreads can reorder that feed when an old review
+      # is edited. Instead, `last_read_book` is tracked locally by the updater
+      # workflow (derived from the previously-current book).
+      if current_book.nil?
         currently_reading_url = "https://www.goodreads.com/review/list_rss/#{user_id}?shelf=currently-reading"
         begin
           xml = HTTParty.get(currently_reading_url, timeout: 10).body
@@ -44,18 +49,6 @@ module GoodreadsReading
           end
         rescue => e
           Jekyll.logger.warn 'Goodreads Reading:', "Failed to fetch currently-reading shelf: #{e.message}"
-        end
-
-        if current_book.nil?
-          read_url = "https://www.goodreads.com/review/list_rss/#{user_id}?shelf=read"
-          begin
-            xml = HTTParty.get(read_url, timeout: 10).body
-            if xml && !xml.strip.empty?
-              last_read_book = extract_first_book_from_xml(xml)
-            end
-          rescue => e
-            Jekyll.logger.warn 'Goodreads Reading:', "Failed to fetch read shelf: #{e.message}"
-          end
         end
       end
 

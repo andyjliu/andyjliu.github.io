@@ -74,18 +74,6 @@ rescue => e
   STDERR.puts "Warning: Failed to fetch currently-reading shelf: #{e.message}"
 end
 
-if current_book.nil?
-  read_url = "https://www.goodreads.com/review/list_rss/#{USER_ID}?shelf=read"
-  begin
-    xml = HTTParty.get(read_url, timeout: 10).body
-    if xml && !xml.strip.empty?
-      last_read_book = extract_first_book_from_xml(xml)
-    end
-  rescue => e
-    STDERR.puts "Warning: Failed to fetch read shelf: #{e.message}"
-  end
-end
-
 existing_data = {}
 if File.exist?(DATA_FILE)
   begin
@@ -97,6 +85,19 @@ end
 
 previous_titles = existing_data['previous_book_titles'] || []
 old_current = existing_data['current_book']
+old_last_read = existing_data['last_read_book']
+
+# Derive "last read" from the previously-current book, so editing an old review
+# doesn't reorder what we consider "last read".
+#
+# Heuristic:
+# - If the current book changed (including disappearing), treat the previous current
+#   as the most recent "last read".
+if book_identity(old_current) && book_identity(old_current) != book_identity(current_book)
+  last_read_book = old_current
+else
+  last_read_book = old_last_read
+end
 
 if book_identity(old_current) != book_identity(current_book)
   if old_current && !old_current['title'].to_s.strip.empty?
