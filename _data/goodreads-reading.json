@@ -1,10 +1,15 @@
 {
-  "current_book": null,
+  "current_book": {
+    "title": "A Theory of Justice",
+    "author": "John Rawls",
+    "url": "https://www.goodreads.com/book/show/129237",
+    "book_id": "129237"
+  },
   "last_read_book": null,
   "previous_book_titles": [
     "Too Like the Lightning",
     "Reasons and Persons",
     "Blindsight"
   ],
-  "last_updated": "2026-04-19T03:33:07Z"
+  "last_updated": "2026-04-20T03:34:58Z"
 }
