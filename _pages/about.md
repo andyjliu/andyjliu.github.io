@@ -25,9 +25,9 @@ latest_posts:
 
 I am a third-year PhD student at the Language Technologies Institute within Carnegie Mellon University’s School of Computer Science, advised by [Mona Diab](https://www.lti.cs.cmu.edu/people/faculty/diab-mona.html) and [Daniel Fried](https://dpfried.github.io/). My research is supported by the [NSF Graduate Fellowship](https://www.nsf.gov/funding/opportunities/grfp-nsf-graduate-research-fellowship-program).
 
-I'm broadly interested in value alignment and human-AI interaction, especially in the context of language models. Some specific subquestions I’m currently interested in include:
-* How can we steer language models toward more fine-grained alignment targets?
-* What are the best ways to train agents to collaborate with users and task partners?
+I'm broadly interested in value alignment and multi-agent interaction, especially in the context of language models. Some specific subquestions I’m currently thinking about include:
+* How can we robustly specify and shape LLMs' values and character?
+* What are the best ways to train agents to collaborate with human task partners?
 * How can we effectively oversee real-world interactions between many LLM agents?
 
 Please reach out (email is best) if you’re interested in my work or in collaborating!
