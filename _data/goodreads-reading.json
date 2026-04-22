@@ -1,20 +1,20 @@
 {
   "current_book": {
-    "title": "Abundance",
-    "author": "Ezra Klein",
-    "url": "https://www.goodreads.com/book/show/176444106",
-    "book_id": "176444106"
-  },
-  "last_read_book": {
     "title": "A Theory of Justice",
     "author": "John Rawls",
     "url": "https://www.goodreads.com/book/show/129237",
     "book_id": "129237"
   },
+  "last_read_book": {
+    "title": "Abundance",
+    "author": "Ezra Klein",
+    "url": "https://www.goodreads.com/book/show/176444106",
+    "book_id": "176444106"
+  },
   "previous_book_titles": [
+    "Abundance",
     "A Theory of Justice",
-    "Too Like the Lightning",
-    "Reasons and Persons"
+    "Too Like the Lightning"
   ],
-  "last_updated": "2026-04-21T03:27:10Z"
+  "last_updated": "2026-04-22T03:25:19Z"
 }
