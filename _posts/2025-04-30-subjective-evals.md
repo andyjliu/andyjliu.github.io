@@ -4,6 +4,7 @@ title:  when llms can write fiction, how will we know?
 date:   2025-04-30
 description: on evals of subjective tasks
 tags: evals, llm
+related_posts: false
 ---
 The public debate is no longer about whether LLM-based systems can reason at all. The recent wave of CoT-trained models released after OpenAI’s release of o1 have achieved impressive results, especially in [mathematics](https://paperswithcode.com/sota/mathematical-reasoning-on-frontiermath) and competition coding problems. Either these models can reason, or you can get much further than anyone would’ve imagined without needing to.
 

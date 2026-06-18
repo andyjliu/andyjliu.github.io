@@ -4,92 +4,105 @@ title: "may research note: mapping the space of LLM values"
 date: 2026-05-29
 description: predicting alignment generalization and taxonomizing LLM values
 tags: alignment, interpretability, llm
+related_posts: false
 ---
-
-[April research note](https://standing-rook-65e.notion.site/April-research-note-mapping-the-space-of-LLM-constraints-35795cc0892f806aa211db5ab07df80c?source=copy_link)
 
 ## TL;DR
 
-- We establish **predicting alignment generalization** as a task of interest. This involves fine-tuning models on individual values one might find in a model spec or constitution, and predicting in advance how this affects support for other values. We establish realistic ceilings for task performance and show that generalization values tend to strongly correlate across models. We hypothesize that getting strong performance on such tasks will get us better-structured representations of the space of values that we want to align LLMs to.
-- This month, we found that extracting [persona vectors](https://arxiv.org/abs/2507.21509) for individual values and computing cosine similarity between these vectors is a reasonable predictor of alignment generalization across different models (ρ ≈ 0.32 vs. a realistic ceiling of ~0.63 from training another model), suggesting one possible method for understanding how value space is structured.
-- We then scaled up our analysis by computing persona vectors for all 20 values in the [Collective Constitutional AI](https://arxiv.org/abs/2406.07814) seed statements. We found that clustering persona vectors gives better structure than using sentence embeddings, with rough clusters separating behavioral/ideological and positive/negative dimensions. We also found similar structures when repeating this analysis across different models. We plan on further scaling up this analysis to more thoroughly cover the set of values found in current constitutions and model specs.
+We establish **predicting alignment generalization** as a task of interest: fine-tuning models on individual values one might find in a model spec or constitution, and predicting in advance how this affects support for other values. We establish realistic ceilings for task performance and show that generalization values tend to strongly correlate across models, and we hypothesize that strong performance on such tasks will yield better-structured representations of the space of values we want to align LLMs to.
+
+This month, we found that extracting [persona vectors](https://arxiv.org/abs/2507.21509) for individual values and computing cosine similarity between them is a reasonable predictor of alignment generalization across different models (ρ ≈ 0.32 vs. a realistic ceiling of ~0.63 from training another model), suggesting one way to understand how value space is structured. We then scaled up the analysis by computing persona vectors for all 20 values in the [Collective Constitutional AI](https://arxiv.org/abs/2406.07814) seed statements, finding that clustering persona vectors gives better structure than sentence embeddings — with rough clusters separating behavioral/ideological and positive/negative dimensions — and that similar structures recur across models. We plan to scale this further to more thoroughly cover the values found in current constitutions and model specs.
 
 ## Motivation
 
-- Labs have achieved significant recent progress on automated alignment evaluations. However, we still have a limited understanding of how models generalize from post-training data and objectives, a key component of training models that can understand and robustly internalize their constitutions. This leaves open the potential for two classes of harm from deployment of models that appear superficially aligned to their constitutions:
-    1. **Training models to follow a constitution containing certain values does not predictably generalize to all values in the spirit of the constitution.** It's difficult to fully specify all desired values in a constitution, which means we need to rely on models generalizing to broadly prosocial personas from the values that we do specify. Incomplete or unexpected generalization could lead to models that follow certain prosocial values, but also cause significant harm. Recent results suggest that labs don't deeply understand how models generalize broadly from specific trained behavior traits.
-    2. **Models learn the spirit of the constitution in the context of a fixed environment, but do not correctly apply these values in novel environments.** One example of this is agentic misbehavior in models; LLMs are frequently trained to defer or refrain from action when unsure of the safety of their response in a chatbot setting. However, when placed in agentic scaffolds, LLMs frequently disregard this and take risky actions, such as irreversibly deleting emails.
-- In both cases, it would be useful to develop a deeper understanding of how post-training models to embody a set of values generalizes to unseen values in downstream deployment settings. This work focuses on predicting how post-training generalizes to unseen values, with the goal of using this to develop better representations and taxonomies of values. Ultimately, we hope to use this to inform the design of model constitutions and post-training environments.
+Labs have made significant recent progress on automated alignment evaluations. However, we still have a limited understanding of how models generalize from post-training data and objectives — a key component of training models that can understand and robustly internalize their constitutions. This leaves open two classes of harm from deploying models that appear superficially aligned to their constitutions.
+
+The first is that **training models to follow a constitution containing certain values does not predictably generalize to all values in the spirit of the constitution.** It's difficult to fully specify every desired value, so we must rely on models generalizing to broadly prosocial personas from the values we do specify. Incomplete or unexpected generalization could produce models that follow certain prosocial values while still causing significant harm, and recent results suggest labs don't deeply understand how models generalize from specific trained behavior traits.
+
+The second is that **models learn the spirit of the constitution in the context of a fixed environment, but do not correctly apply these values in novel environments.** Agentic misbehavior is one example: LLMs are frequently trained to defer or refrain from acting when unsure of the safety of a response in a chatbot setting, but when placed in agentic scaffolds they often disregard this and take risky actions, such as irreversibly deleting emails.
+
+In both cases, it would be useful to understand how post-training a model to embody a set of values generalizes to unseen values in downstream deployment settings. This work focuses on predicting how post-training generalizes to unseen values, with the goal of developing better representations and taxonomies of values — which we hope can ultimately inform the design of model constitutions and post-training environments.
 
 ## Generalization prediction is possible & correlates across models
 
-- We started by focusing on training a target model to follow individual **constraints** (prohibitions on specific LLM behaviors). This was done because constraints are relatively easy to evaluate compared to adherence to more abstract values, and we were using relatively small models to generate data. We selected nine constraints from OpenAI's Model Spec, Claude's Constitution, and Google's Sparrow Dialogue Rules, which we classified into three categories based on the [harm area](https://arxiv.org/abs/2112.04359) they were most related to:
+We started by training a target model to follow individual **constraints** (prohibitions on specific LLM behaviors). Constraints are relatively easy to evaluate compared with adherence to more abstract values, which mattered because we were using relatively small models to generate data. We selected nine constraints from OpenAI's Model Spec, Claude's Constitution, and Google's Sparrow Dialogue Rules, and classified them into three categories based on the [harm area](https://arxiv.org/abs/2112.04359) they were most related to:
 
-    <details>
-    <summary><strong>Human-Computer Interaction Constraints</strong></summary>
+- **Human-computer interaction constraints**
+  - `no_affirm_delusions` — don't affirm ungrounded beliefs that could cause users distress
+  - `no_exploit_psych` — don't exploit psychological weaknesses or user biases to persuade users
+  - `no_undermine_relationships` — don't undermine users' capacity for meaningful human relationships
+- **Misinformation constraints**
+  - `no_lie_to_hide` — when unable to answer, say so truthfully
+  - `no_false_impressions` — don't create false impressions through actions, deceptive framing, selective emphasis, etc.
+  - `no_white_lies` — don't tell white lies, including socially conventional ones
+- **Discrimination constraints**
+  - `no_discriminate` — don't discriminate based on protected traits
+  - `no_stereotypes` — don't use stereotypes
+  - `no_identity_attacks` — don't make negative or hateful comments targeting identity
 
-    - no_affirm_delusions (don't affirm ungrounded beliefs that could cause users distress)
-    - no_exploit_psych (don't exploit psychological weaknesses or user biases to persuade users)
-    - no_undermine_relationships (don't undermine users' capacity for meaningful human relationships)
+For each individual constraint, we used [ConflictScope](https://arxiv.org/abs/2509.25369) to generate user prompts that force models to choose between following the constraint and prioritizing another value, such as user autonomy or empowerment. We converted this scenario set into a preference dataset by prompting the target model to generate constraint-following and constraint-ignoring actions, which we mapped to chosen/rejected responses, and then used DPO to fine-tune the target model on each individual constraint dataset, yielding a fine-tuned checkpoint per constraint.
 
-    </details>
+We then evaluated each checkpoint on all nine constraint-specific holdout eval sets to see how training on individual constraints generalized to unseen ones. To quantify generalization, we computed a 9×9 generalization matrix M, where M(i,j) = (a(i,j) − a(∅,j)) / (1 − a(∅,j)); here a(i,j) is the rate at which a model trained on constraint i chose to prioritize constraint j, and a(∅,j) is the rate at which the base model prioritized constraint j. This is a normalized measure of how much training a model on one value shifts its propensity to follow another.
 
-    <details>
-    <summary><strong>Misinformation Constraints</strong></summary>
+We first ran this pipeline on Olmo-2-7B-SFT, which in previous experiments we found especially steerable and capable of producing larger individual effect sizes. To establish that the prediction task was possible, we computed generalization matrices using four other, closely related methods and measured the Spearman's rank correlation between the generalization values from each method (across all 9×8 = 72 off-diagonal pairs of values).
 
-    - no_lie_to_hide (when unable to answer, say so truthfully)
-    - no_false_impressions (don't create false impressions through actions, deceptive framing, selective emphasis, etc.)
-    - no_white_lies (don't tell white lies, including socially conventional ones)
+The first two methods establish an *actual ceiling*. For the **random train-test split**, we generated four different train-test splits and reconstructed a 9×9 generalization matrix for each; if the four matrices were not nearly perfectly correlated, it would suggest the prediction task is too noisy to extract useful signal. For the **filtered dataset**, we reran the O2-7B fine-tuning on a filtered subset of especially high-quality prompt-response pairs (on average ~40–50% the size of the original constraint datasets, but similarly distributed). It would be unrealistic to use either method in the real-world analogue of this task — both involve training models in essentially the same way as the real method — but they let us establish a ceiling for how predictable the task actually is.
 
-    </details>
+The other two methods establish a more *realistic ceiling*. For **cross-model transfer**, instead of fine-tuning O2-7B we fine-tuned Tulu-3.1-8B (post-trained similarly to O2-7B from a Llama base model) on the same constraint datasets, using a filtered dataset so we could compare directly against the filtered O2-7B model. For **prompt steering**, rather than fine-tuning O2-7B on an individual constraint, we gave separate instances of O2-7B a system prompt pointing clearly toward that constraint and evaluated transfer to the others.
 
-    <details>
-    <summary><strong>Discrimination Constraints</strong></summary>
+We find that all four ceiling methods are significantly correlated with the generalization values from the original O2-7B finetune, with a ceiling of 0.8 (train-test split). This suggests that while DPO generalization behavior can be somewhat noisy, it is at least possible to develop reasonably strong correlates.
 
-    - no_discriminate (don't discriminate based on protected traits)
-    - no_stereotypes (don't use stereotypes)
-    - no_identity_attacks (don't make negative/hateful comments targeting identity)
+<div class="row justify-content-center">
+    <div class="col-sm-9 mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/generalization-ceiling-methods.png" class="img-fluid rounded z-depth-1" zoomable=true alt="Generalization correlation across ceiling methods" %}
+    </div>
+</div>
 
-    </details>
+Because T3.1-8B and O2-7B were post-trained in similar ways, we also studied how well DPO generalization correlated between less related models. We replicated the fine-tuning pipeline with Qwen-2.5-7B-Instruct and Olmo-2-32B-SFT, letting us see whether generalization behavior is similar across model families and scales. We find strongly significant correlations in both cases, although O2-7B and Q2.5-7B are noticeably less similar than other pairs. This can partially be attributed to steerability: Q2.5-7B was generally less moved by our system prompting, leading to noise from lower generalization values.
 
-- For each individual constraint, we used [ConflictScope](https://arxiv.org/abs/2509.25369) to generate a set of user prompts that would force models to choose between following the constraint and prioritizing another value, such as user autonomy or empowerment. We then converted this scenario set into a preference dataset by prompting the target model to generate constraint-following and constraint-ignoring actions, which we mapped to chosen/rejected responses. We then used DPO to fine-tune the target model on an individual constraint dataset, yielding a fine-tuned checkpoint for each constraint.
-- We then evaluated each checkpoint on each of nine constraint-specific holdout eval sets, to understand how training on individual constraints generalized to unseen constraints. To evaluate generalization, we computed a 9x9 generalization matrix M, where M(i,j) = (a(i,j) - a(∅,j))/(1 - a(∅,j)); here, a(i,j) denotes the rate at which a model trained on i chose to prioritize constraint j, while a(∅,j) is the rate at which the base model chose to prioritize constraint j. This metric is a normalized measure of how much training a model on one value shifts its propensity to follow another value.
-- We first ran this pipeline on Olmo-2-7B-SFT, which in previous experiments we found was especially steerable and could produce larger individual effect sizes. To establish that this task was possible, we then computed generalization matrices using four other, closely related methods, and computed the Spearman's rank correlation between the generalization values computed with each method (across all 9\*8 = 72 off-diagonal pairs of values). The four alternate methods were:
-    - **Random Train-Test Split (actual ceiling):** We randomly generated four different train-test splits and reconstructed a 9x9 generalization matrix for each train-test split. If the resulting four matrices are not nearly-perfectly correlated, this might suggest that the prediction task is too noisy to extract useful signal from.
-    - **Filtered Dataset (actual ceiling):** For each constraint, we reran the O2-7B fine-tuning on a filtered subset of especially high-quality prompt-response pairs (on average, these datasets were ~40-50% the size of the original constraint datasets, but similarly distributed). While it'd be unrealistic to use the filtered dataset or random split methods in the real-world analogue of this task (as both involve training models in identical ways to the real method), we did so to establish a ceiling for how possible the predictive task actually was.
-    - **Cross-Model Transfer (realistic ceiling):** Instead of fine-tuning O2-7B, we instead fine-tuned Tulu-3.1-8B (which was post-trained similarly to O2-7B from a Llama base model) on the same constraint datasets. We trained on a filtered dataset, and as such compute correlations with the filtered O2-7B model for a maximally direct comparison.
-    - **Prompt Steering (realistic ceiling):** instead of fine-tuning O2-7B on an individual constraint and evaluating transfer to other constraints, we gave separate instances of O2-7B a system prompt that clearly pointed it towards an individual constraint, and evaluated transfer to other constraints with this steering prompt. This and the Tulu fine-tuning setting represent more realistic ceilings for our prediction task.
-- We find that when comparing generalization, all four ceiling methods are significantly correlated with the generalization values from the original O2-7B finetune, with a ceiling of 0.8 (Train-Test Split). This suggests that while DPO generalization behavior can be somewhat noisy, it is at least possible to develop reasonably strong correlates.
-
-![Generalization correlation across ceiling methods](/assets/img/generalization-ceiling-methods.png)
-
-- Because T3.1-8B and O2-7B were post-trained in similar ways, we also sought to study how well DPO generalization was correlated between different, less related models. To this end, we replicated the fine-tuning pipeline with two additional models; Qwen-2.5-7B-Instruct and Olmo-2-32B-SFT. This allows us to understand whether generalization behavior is similar across model families and scales. We find strongly significant correlations in both cases, although O2-7B and Q2.5-7B are noticeably less similar than other models. This can partially be attributed to steerability: Q2.5-7B was generally less moved by our system prompting, leading to noise due to lower generalization values.
-
-![Cross-model generalization correlations](/assets/img/cross-model-generalization.png)
+<div class="row justify-content-center">
+    <div class="col-sm-9 mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/cross-model-generalization.png" class="img-fluid rounded z-depth-1" zoomable=true alt="Cross-model generalization correlations" %}
+    </div>
+</div>
 
 ## Value vectors predict post-training generalization
 
-- [Past work](https://arxiv.org/abs/2504.15236) has taxonomized values by computing the sentence embeddings of value descriptions and then clustering the results, but it's unclear how useful such categorizations are in predictive settings. One advantage of the generalization prediction task is that it might help us learn more functional representations of values (e.g. representations that more closely cluster values that recommend similar actions across scenarios).
-- One candidate representation is [persona vectors](https://arxiv.org/abs/2507.21509). For a given value, we can generate prompts that might test a model's adherence to the value, then steer the model towards pro-value and anti-value responses via system prompting. By computing the mean activation difference between pro-value and anti-value responses, we can extract a direction in the model's activation space that represents this value. We extract a candidate vector for each layer, then (similarly to the original paper) choose the candidate layer that most strongly steers the model towards the target value in a heldout prompt set; to ensure fair comparisons, we select a single layer based on average performance across layers for all values, then take the value vector at this layer for all values.
-- The original persona vectors paper simply prompted an LLM to generate prompts that might test adherence to a given value. We experiment with ConflictScope-style prompt generation instead, by explicitly generating conflicts between the target value and a randomly selected set of related values. We hypothesize that this might enable more fine-grained extraction of directions in activation space, rather than vectors that map to general "aligned" behavior.
-- For each prompt generation method (default vs ConflictScope) and vector extraction method (persona vectors vs sentence embeddings), we compute cosine similarity between each pair of values, and then measure the correlation between pairwise cosine similarities and the DPO generalization matrix from the previous section.
+[Past work](https://arxiv.org/abs/2504.15236) has taxonomized values by computing sentence embeddings of value descriptions and clustering the results, but it's unclear how useful such categorizations are in predictive settings. One advantage of the generalization prediction task is that it might help us learn more functional representations of values — for instance, representations that more closely cluster values recommending similar actions across scenarios.
 
-![Correlation of cosine similarity methods with DPO generalization](/assets/img/value-vector-correlation.png)
+One candidate representation is the [persona vector](https://arxiv.org/abs/2507.21509). For a given value, we generate prompts that test a model's adherence to it, then steer the model toward pro-value and anti-value responses via system prompting; the mean activation difference between these responses gives a direction in the model's activation space representing the value. We extract a candidate vector at each layer and, following the original paper, choose the layer that most strongly steers the model toward the target value on a heldout prompt set. To keep comparisons fair, we select a single layer based on average performance across all values and take every value vector at that layer.
 
-- We find that persona vector similarity is significantly more predictive of downstream generalization (both in the DPO generalization and prompt steering generalization settings) than sentence embedding similarity, suggesting this may be a better foundation upon which to taxonomize values. We also find that ConflictScope-style prompt generation outperforms the persona vector baseline, although this may be confounded by the fact that we evaluated on ConflictScope prompts.
+The original persona vectors paper simply prompted an LLM to generate prompts testing adherence to a given value. We instead experiment with ConflictScope-style prompt generation, explicitly generating conflicts between the target value and a randomly selected set of related values, hypothesizing that this enables more fine-grained extraction of directions in activation space rather than vectors that map to general "aligned" behavior. For each prompt generation method (default vs. ConflictScope) and vector extraction method (persona vectors vs. sentence embeddings), we compute cosine similarity between each pair of values and measure the correlation between those pairwise similarities and the DPO generalization matrix from the previous section.
+
+<div class="row justify-content-center">
+    <div class="col-sm-9 mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/value-vector-correlation.png" class="img-fluid rounded z-depth-1" zoomable=true alt="Correlation of cosine similarity methods with DPO generalization" %}
+    </div>
+</div>
+
+We find that persona vector similarity is significantly more predictive of downstream generalization — in both the DPO generalization and prompt steering settings — than sentence embedding similarity, suggesting it may be a better foundation on which to taxonomize values. We also find that ConflictScope-style prompt generation outperforms the persona vector baseline, though this may be confounded by the fact that we evaluated on ConflictScope prompts.
 
 ## Value vectors have interpretable structure within models
 
-- Based on the preliminary evidence that value vectors seem to be more predictive of downstream generalization, we next looked at whether value vectors themselves had an interpretable structure. To do this, we needed a larger set of values; we chose to use the seed statements in [Collective Constitutional AI](https://arxiv.org/abs/2406.07814). There were 21 seed statements spanning desired behavior promotion, undesired behavior avoidance, rights/respect, and existential risk. We computed value vectors for 20 of them using two models, O2-7B and Llama-3.1-8B-Instruct (we were unable to reliably elicit anti-value behavior for "The AI shouldn't act in a way that threatens humanity" due to refusals).
-- For each model, we computed a value vector for each of the 20 CCAI values, then used this to create a 20 x 20 value matrix, where each element represents the cosine similarity between a pair of value vectors. We then used multi-dimensional scaling to map this 20 x 20 matrix onto a 2D map to visualize which values are considered close within a model's activations. This similarity matrix → MDS pipeline resembles the way in which the [Schwartz Values Theory](https://psycnet.apa.org/record/1988-01444-001) was constructed. We also repeated this analysis using a sentence embeddings model, to compare the structure of values within each method.
+Given the preliminary evidence that value vectors are more predictive of downstream generalization, we next asked whether the vectors themselves have interpretable structure. This required a larger set of values, so we turned to the seed statements in [Collective Constitutional AI](https://arxiv.org/abs/2406.07814): 21 statements spanning desired behavior promotion, undesired behavior avoidance, rights and respect, and existential risk. We computed value vectors for 20 of them using two models, O2-7B and Llama-3.1-8B-Instruct (we couldn't reliably elicit anti-value behavior for "The AI shouldn't act in a way that threatens humanity" due to refusals).
 
-![MDS map of value vectors vs sentence embeddings](/assets/img/mds-value-vectors.png)
+For each model, we computed a value vector for each of the 20 CCAI values and assembled a 20×20 matrix whose entries are the cosine similarities between pairs of value vectors. We then applied multi-dimensional scaling to map this matrix onto a 2D plane, visualizing which values sit close together within a model's activations. This similarity-matrix-to-MDS pipeline resembles how the [Schwartz Values Theory](https://psycnet.apa.org/record/1988-01444-001) was constructed. We repeated the analysis with a sentence embeddings model to compare the structure each method produces.
 
-- We find that the MDS map of value vectors extracted from O2-7B (L) is significantly more structured than those extracted from a sentence embedding model (R). There appear to be two significant clusters within the O2-7B value structure - one focuses on [positive](https://plato.stanford.edu/entries/william-david-ross/) values (those that focus on model obligations to do something beneficial), while the other focuses on negative values (those that focus on model obligations to avoid causing harm, such as the earlier constraints). We also observe what appears to be a second orthogonal dimension, differentiating individual values (those related to human-LLM interaction, like not claiming human identity or helpfulness) from societal values (those related to broader societal goods, like free speech or justice).
+<div class="row justify-content-center">
+    <div class="col-sm-9 mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/mds-value-vectors.png" class="img-fluid rounded z-depth-1" zoomable=true alt="MDS map of value vectors vs sentence embeddings" %}
+    </div>
+</div>
 
-![Value structure clusters](/assets/img/value-structure-clusters.png)
+We find that the MDS map of value vectors extracted from O2-7B (left) is significantly more structured than the one from a sentence embedding model (right). Two clusters appear within the O2-7B value structure: one focused on [positive](https://plato.stanford.edu/entries/william-david-ross/) values (model obligations to do something beneficial) and one focused on negative values (obligations to avoid causing harm, like the earlier constraints). We also observe what appears to be a second, orthogonal dimension separating individual values (those tied to human-LLM interaction, like not claiming human identity or helpfulness) from societal values (those tied to broader societal goods, like free speech or justice).
 
-- This improved structure can also be verified quantitatively - both O2-7B and L3.1-8B have higher silhouette scores than sentence embeddings, which performs below a random baseline. We are also unable to reliably elicit value vectors from Q2.5-7B, due to the aforementioned lack of steerability. However, we do find that the 20x20 vector similarity matrices are highly similar between O2-7B and L3.1-8B, suggesting some amount of inter-model transfer of this value structure.
+<div class="row justify-content-center">
+    <div class="col-sm-9 mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/value-structure-clusters.png" class="img-fluid rounded z-depth-1" zoomable=true alt="Value structure clusters" %}
+    </div>
+</div>
+
+This improved structure also holds up quantitatively: both O2-7B and L3.1-8B have higher silhouette scores than sentence embeddings, which perform below a random baseline. We were again unable to reliably elicit value vectors from Q2.5-7B because of its lack of steerability, but the 20×20 vector similarity matrices are highly similar between O2-7B and L3.1-8B, suggesting some inter-model transfer of this value structure.
 
 ## Potential Next Steps
 
