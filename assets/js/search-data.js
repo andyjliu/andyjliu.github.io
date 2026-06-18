@@ -30,7 +30,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-when-llms-can-write-fiction-how-will-we-know",
+        },{id: "post-may-research-note-mapping-the-space-of-llm-values",
+      
+        title: "may research note: mapping the space of LLM values",
+      
+      description: "predicting alignment generalization and taxonomizing LLM values",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2026/mapping-llm-values/";
+        
+      },
+    },{id: "post-when-llms-can-write-fiction-how-will-we-know",
       
         title: "when llms can write fiction, how will we know?",
       
