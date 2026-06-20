@@ -1,20 +1,20 @@
 {
   "current_book": {
-    "title": "Accelerando",
-    "author": "Charles Stross",
-    "url": "https://www.goodreads.com/book/show/17863",
-    "book_id": "17863"
-  },
-  "last_read_book": {
     "title": "A Theory of Justice",
     "author": "John Rawls",
     "url": "https://www.goodreads.com/book/show/129237",
     "book_id": "129237"
   },
+  "last_read_book": {
+    "title": "Accelerando",
+    "author": "Charles Stross",
+    "url": "https://www.goodreads.com/book/show/17863",
+    "book_id": "17863"
+  },
   "previous_book_titles": [
+    "Accelerando",
     "A Theory of Justice",
-    "Abundance",
-    "Too Like the Lightning"
+    "Abundance"
   ],
-  "last_updated": "2026-06-19T05:01:54Z"
+  "last_updated": "2026-06-20T04:14:55Z"
 }
