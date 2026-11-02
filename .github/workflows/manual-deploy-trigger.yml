@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       reason:
-        description: 'Reason for manual deployment'
+        description: "Reason for manual deployment"
         required: false
-        default: 'Manual deployment requested'
+        default: "Manual deployment requested"
         type: string
       force_rebuild:
-        description: 'Force full rebuild (clear caches)'
+        description: "Force full rebuild (clear caches)"
         required: false
         default: false
         type: boolean
@@ -28,7 +28,7 @@ jobs:
           echo "Reason: ${{ github.event.inputs.reason }}"
           echo "Force rebuild: ${{ github.event.inputs.force_rebuild }}"
           echo "Triggered by: ${{ github.actor }}"
-      
+
       - name: Trigger main deployment workflow
         uses: actions/github-script@v7
         with:
@@ -45,7 +45,7 @@ jobs:
               }
             });
             console.log('✅ Main deployment workflow triggered successfully');
-            
+
             // Also log to step summary
             await core.summary
               .addHeading('🚀 Manual Deployment Triggered')

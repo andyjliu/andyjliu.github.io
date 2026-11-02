@@ -20,7 +20,7 @@ jobs:
         with:
           # Fetch the latest changes including the Goodreads update
           fetch-depth: 0
-      
+
       - name: Check if Goodreads data was updated
         id: check_changes
         run: |
@@ -39,7 +39,7 @@ jobs:
             echo "goodreads_updated=false" >> $GITHUB_OUTPUT
             echo "ℹ️ No recent Goodreads update commits found"
           fi
-      
+
       - name: Trigger deployment
         if: steps.check_changes.outputs.goodreads_updated == 'true'
         uses: actions/github-script@v7
@@ -52,7 +52,7 @@ jobs:
               ref: 'main'
             });
             console.log('✅ Deployment workflow triggered successfully');
-      
+
       - name: Skip deployment
         if: steps.check_changes.outputs.goodreads_updated != 'true'
         run: |

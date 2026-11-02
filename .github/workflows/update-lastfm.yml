@@ -3,7 +3,7 @@ name: Update Last.fm Top Artist
 on:
   schedule:
     # Runs daily at 6:00 AM UTC
-    - cron: '0 6 * * *'
+    - cron: "0 6 * * *"
   workflow_dispatch: # Allow manual trigger
 
 permissions:
