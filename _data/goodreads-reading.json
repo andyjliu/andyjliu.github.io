@@ -1,20 +1,15 @@
 {
-  "current_book": {
+  "current_book": null,
+  "last_read_book": {
     "title": "Sources of the Self: The Making of the Modern Identity",
     "author": "Charles Margrave Taylor",
     "url": "https://www.goodreads.com/book/show/37858",
     "book_id": "37858"
   },
-  "last_read_book": {
-    "title": "A Theory of Justice",
-    "author": "John Rawls",
-    "url": "https://www.goodreads.com/book/show/129237",
-    "book_id": "129237"
-  },
   "previous_book_titles": [
+    "Sources of the Self: The Making of the Modern Identity",
     "A Theory of Justice",
-    "Accelerando",
-    "Abundance"
+    "Accelerando"
   ],
-  "last_updated": "2026-10-19T04:11:10Z"
+  "last_updated": "2026-11-02T19:56:29Z"
 }
