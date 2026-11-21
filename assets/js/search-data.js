@@ -75,6 +75,12 @@ ninja.data = [{
           section: "News",},{id: "news-generative-value-conflicts-reveal-llm-priorities-was-accepted-to-iclr-2026-see-you-in-brazil",
           title: 'Generative Value Conflicts Reveal LLM Priorities was accepted to ICLR 2026. See you...',
           description: "",
+          section: "News",},{id: "news-our-work-on-predicting-alignment-generalization-with-value-representations-is-now-out-arxiv-project-page",
+          title: 'Our work on Predicting Alignment Generalization with Value Representations is now out! [arXiv]...',
+          description: "",
+          section: "News",},{id: "news-i-have-passed-my-thesis-proposal-on-representing-and-steering-value-systems-in-large-language-models",
+          title: 'I have passed my thesis proposal on Representing and Steering Value Systems in...',
+          description: "",
           section: "News",},{
         id: 'social-email',
         title: 'email',
